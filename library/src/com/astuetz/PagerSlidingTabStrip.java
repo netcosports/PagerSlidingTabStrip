@@ -56,22 +56,22 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     public OnPageChangeListener delegatePageListener;
     private LinearLayout.LayoutParams defaultTabLayoutParams;
     private LinearLayout.LayoutParams expandedTabLayoutParams;
-    private LinearLayout tabsContainer;
+    protected LinearLayout tabsContainer;
     private ViewPager pager;
-    private int tabCount;
+    protected int tabCount;
     private int currentPosition = 0;
     private float currentPositionOffset = 0f;
-    private Paint rectPaint;
+    protected Paint rectPaint;
     private Paint dividerPaint;
     private int indicatorColor = 0xFF666666;
-    private int underlineColor = 0x1A000000;
+    protected int underlineColor = 0x1A000000;
     private int dividerColor = 0x1A000000;
     private boolean shouldExpand = false;
     private boolean textAllCaps = true;
     private boolean underlineBelowIndicator = true;
     private int scrollOffset = 52;
     private int indicatorHeight = 8;
-    private int underlineHeight = 2;
+    protected int underlineHeight = 2;
     private int dividerPadding = 12;
     private int tabPadding = 24;
     private int dividerWidth = 1;
@@ -319,8 +319,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
         // draw underline
         if (!underlineBelowIndicator) {
-            rectPaint.setColor(underlineColor);
-            canvas.drawRect(0, height - underlineHeight, tabsContainer.getWidth(), height, rectPaint);
+            drawUnderline(canvas);
         }
         // draw indicator line
 
@@ -342,12 +341,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             lineRight = (currentPositionOffset * nextTabRight + (1f - currentPositionOffset) * lineRight);
         }
 
-        canvas.drawRect(lineLeft, height - indicatorHeight, lineRight, height, rectPaint);
+        drawIndicator(canvas, lineLeft, lineRight);
 
         // draw underline
         if (underlineBelowIndicator) {
-            rectPaint.setColor(underlineColor);
-            canvas.drawRect(0, height - underlineHeight, tabsContainer.getWidth(), height, rectPaint);
+            drawUnderline(canvas);
         }
 
         // draw divider
@@ -357,6 +355,15 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             View tab = tabsContainer.getChildAt(i);
             canvas.drawLine(tab.getRight(), dividerPadding, tab.getRight(), height - dividerPadding, dividerPaint);
         }
+    }
+
+    protected void drawIndicator(Canvas canvas, float lineLeft, float lineRight) {
+        canvas.drawRect(lineLeft, getHeight() - indicatorHeight, lineRight, getHeight(), rectPaint);
+    }
+
+    protected void drawUnderline(Canvas canvas) {
+        rectPaint.setColor(underlineColor);
+        canvas.drawRect(0, getHeight() - underlineHeight, tabsContainer.getWidth(), getHeight(), rectPaint);
     }
 
     public void setIndicatorColorResource(int resId) {
