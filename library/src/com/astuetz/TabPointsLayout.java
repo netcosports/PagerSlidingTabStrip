@@ -18,8 +18,8 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private static final int DEFAULT_RADIUS_POSITION = 3;
     private static final int DEFAULT_RADIUS_INDICATOR = 6;
 
-    private int mRadiusPosition = DEFAULT_RADIUS_POSITION;
-    private int mRadiusIndicator = DEFAULT_RADIUS_INDICATOR;
+    private int mRadiusPosition;
+    private int mRadiusIndicator;
     private int mUnderlinePositions = POSITION_BOTTOM;
 
     public TabPointsLayout(Context context) {
@@ -34,8 +34,8 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
         super(context, attrs, defStyle);
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
-        mRadiusPosition = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mRadiusPosition, dm);
-        mRadiusIndicator = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mRadiusIndicator, dm);
+        mRadiusPosition = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_RADIUS_POSITION, dm);
+        mRadiusIndicator = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_RADIUS_INDICATOR, dm);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPointsLayout);
         try {
