@@ -15,6 +15,16 @@
         <attr name="pstsShouldExpand" format="boolean" />
         <attr name="pstsTextAllCaps" format="boolean" />
         <attr name="pstsUnderlineBelowIndicator" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="PagerSlidingTabStrip.TabPointsLayout">
+        <attr name="pstsCirclePositionRadius" format="dimension" />
+        <attr name="pstsCircleIndicatorRadius" format="dimension" />
+        <attr name="pstsUnderlinePositions" format="enum">
+            <enum name="bottom" value="0" />
+            <enum name="top" value="1" />
+        </attr>
     </declare-styleable>
 
 </resources>
