@@ -15,8 +15,11 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private static final int POSITION_BOTTOM = 0;
     private static final int POSITION_TOP = 1;
 
-    private int mCirclePositionRadius = 3;
-    private int mCircleIndicatorRadius = 6;
+    private static final int DEFAULT_RADIUS_POSITION = 3;
+    private static final int DEFAULT_RADIUS_INDICATOR = 6;
+
+    private int mRadiusPosition = DEFAULT_RADIUS_POSITION;
+    private int mRadiusIndicator = DEFAULT_RADIUS_INDICATOR;
     private int mUnderlinePositions = POSITION_BOTTOM;
 
     public TabPointsLayout(Context context) {
@@ -31,21 +34,18 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
         super(context, attrs, defStyle);
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
-        mCirclePositionRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mCirclePositionRadius, dm);
-        mCircleIndicatorRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mCircleIndicatorRadius, dm);
-        if (mCircleIndicatorRadius < mCirclePositionRadius) {
-            mCircleIndicatorRadius = mCirclePositionRadius;
-        }
+        mRadiusPosition = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mRadiusPosition, dm);
+        mRadiusIndicator = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mRadiusIndicator, dm);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PagerSlidingTabStrip_TabPointsLayout);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPointsLayout);
         try {
-            mUnderlinePositions = a.getInteger(R.styleable.PagerSlidingTabStrip_TabPointsLayout_pstsUnderlinePositions, POSITION_BOTTOM);
+            mUnderlinePositions = a.getInteger(R.styleable.TabPointsLayout_pstsUnderlinePositions, POSITION_BOTTOM);
 
-            mCirclePositionRadius = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_TabPointsLayout_pstsCirclePositionRadius, mCirclePositionRadius);
-            mCircleIndicatorRadius = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_TabPointsLayout_pstsCircleIndicatorRadius, mCircleIndicatorRadius);
+            mRadiusPosition = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCirclePositionRadius, mRadiusPosition);
+            mRadiusIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCircleIndicatorRadius, mRadiusIndicator);
 
-            if (mCircleIndicatorRadius < mCirclePositionRadius) {
-                mCircleIndicatorRadius = mCirclePositionRadius;
+            if (mRadiusIndicator < mRadiusPosition) {
+                mRadiusIndicator = mRadiusPosition;
             }
         } finally {
             a.recycle();
@@ -56,11 +56,11 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     protected void drawIndicator(Canvas canvas, float lineLeft, float lineRight) {
         float dy;
         if (mUnderlinePositions == POSITION_TOP) {
-            dy = mCircleIndicatorRadius;
+            dy = mRadiusIndicator;
         } else {
-            dy = getHeight() - mCircleIndicatorRadius;
+            dy = getHeight() - mRadiusIndicator;
         }
-        canvas.drawCircle((lineRight + lineLeft) / 2, dy, mCircleIndicatorRadius, rectPaint);
+        canvas.drawCircle((lineRight + lineLeft) / 2, dy, mRadiusIndicator, rectPaint);
     }
 
     @Override
@@ -77,11 +77,11 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
         float top;
         float bottom;
         if (mUnderlinePositions == POSITION_TOP) {
-            top = mCircleIndicatorRadius - underlineHeight / 2;
-            bottom = mCircleIndicatorRadius + underlineHeight / 2;
+            top = mRadiusIndicator - underlineHeight / 2;
+            bottom = mRadiusIndicator + underlineHeight / 2;
         } else {
-            top = height - mCircleIndicatorRadius - underlineHeight / 2;
-            bottom = height - mCircleIndicatorRadius + underlineHeight / 2;
+            top = height - mRadiusIndicator - underlineHeight / 2;
+            bottom = height - mRadiusIndicator + underlineHeight / 2;
         }
 
         canvas.drawRect(left, top, right, bottom, rectPaint);
@@ -91,11 +91,11 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             float dx = tab.getRight() - (tab.getWidth() / 2);
             float dy;
             if (mUnderlinePositions == POSITION_TOP) {
-                dy = mCircleIndicatorRadius;
+                dy = mRadiusIndicator;
             } else {
-                dy = height - mCircleIndicatorRadius;
+                dy = height - mRadiusIndicator;
             }
-            canvas.drawCircle(dx, dy, mCirclePositionRadius, rectPaint);
+            canvas.drawCircle(dx, dy, mRadiusPosition, rectPaint);
         }
     }
 }

@@ -18,7 +18,7 @@
 
     </declare-styleable>
 
-    <declare-styleable name="PagerSlidingTabStrip.TabPointsLayout">
+    <declare-styleable name="TabPointsLayout">
         <attr name="pstsCirclePositionRadius" format="dimension" />
         <attr name="pstsCircleIndicatorRadius" format="dimension" />
         <attr name="pstsUnderlinePositions" format="enum">
