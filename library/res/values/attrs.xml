@@ -21,6 +21,7 @@
     <declare-styleable name="TabPointsLayout">
         <attr name="pstsCirclePositionRadius" format="dimension" />
         <attr name="pstsCircleIndicatorRadius" format="dimension" />
+        <attr name="pstsMarginVerticalIndicator" format="dimension" />
         <attr name="android:gravity" />
     </declare-styleable>
 

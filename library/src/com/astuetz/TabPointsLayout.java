@@ -19,6 +19,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private int mRadiusPosition;
     private int mRadiusIndicator;
     private int mTextGravity = Gravity.BOTTOM;
+    private int mMarginVerticalIndicator;
 
     public TabPointsLayout(Context context) {
         this(context, null);
@@ -41,6 +42,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
             mRadiusPosition = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCirclePositionRadius, mRadiusPosition);
             mRadiusIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCircleIndicatorRadius, mRadiusIndicator);
+            mMarginVerticalIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsMarginVerticalIndicator, 0);
 
             if (mRadiusIndicator < mRadiusPosition) {
                 mRadiusIndicator = mRadiusPosition;
@@ -52,7 +54,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
     @Override
     protected void drawIndicator(Canvas canvas, float lineLeft, float lineRight) {
-        canvas.drawCircle((lineRight + lineLeft) / 2, getHeight() / 2, mRadiusIndicator, rectPaint);
+        canvas.drawCircle((lineRight + lineLeft) / 2, getHeight() / 2 - mMarginVerticalIndicator, mRadiusIndicator, rectPaint);
     }
 
     @Override
@@ -71,14 +73,14 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
         View lastTab = tabsContainer.getChildAt(tabCount - 1);
         float right = lastTab.getRight() - (lastTab.getWidth() / 2);
 
-        float top = height / 2 - underlineHeight / 2;
-        float bottom = height / 2 + underlineHeight / 2;
+        float top = height / 2 - underlineHeight / 2 - mMarginVerticalIndicator;
+        float bottom = height / 2 + underlineHeight / 2 - mMarginVerticalIndicator;
         canvas.drawRect(left, top, right, bottom, rectPaint);
 
         for (int i = 0; i < tabCount; i++) {
             View tab = tabsContainer.getChildAt(i);
             float dx = tab.getRight() - (tab.getWidth() / 2);
-            float dy = height / 2;
+            float dy = height / 2 - mMarginVerticalIndicator;
             canvas.drawCircle(dx, dy, mRadiusPosition, rectPaint);
         }
     }
