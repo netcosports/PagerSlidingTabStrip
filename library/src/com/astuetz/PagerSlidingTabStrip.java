@@ -231,10 +231,14 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
         TextView tab = new TextView(getContext());
         tab.setText(title);
-        tab.setGravity(Gravity.CENTER);
+        tab.setGravity(getGravityText());
         tab.setSingleLine();
 
         addTab(position, tab);
+    }
+
+    protected int getGravityText() {
+        return Gravity.CENTER;
     }
 
     private void addIconTab(final int position, int resId) {
