@@ -18,7 +18,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
     private int mRadiusPosition;
     private int mRadiusIndicator;
-    private int mGravityText = Gravity.BOTTOM;
+    private int mTextGravity = Gravity.BOTTOM;
 
     public TabPointsLayout(Context context) {
         this(context, null);
@@ -37,7 +37,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPointsLayout);
         try {
-            mGravityText = a.getInteger(R.styleable.TabPointsLayout_android_gravity, Gravity.BOTTOM);
+            mTextGravity = a.getInteger(R.styleable.TabPointsLayout_android_gravity, Gravity.BOTTOM);
 
             mRadiusPosition = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCirclePositionRadius, mRadiusPosition);
             mRadiusIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCircleIndicatorRadius, mRadiusIndicator);
@@ -56,8 +56,8 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     }
 
     @Override
-    protected int getGravityText() {
-        return mGravityText;
+    protected int getTextGravity() {
+        return mTextGravity;
     }
 
     @Override
