@@ -120,13 +120,18 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
     @Override
     public void setTypeface(Typeface typeface, int style) {
-        setTypeface(typeface, typeface, style);
+        setTypeface(typeface, typeface, style, style);
     }
 
-    public void setTypeface(Typeface typeface, Typeface typefaceChecked, int style) {
+    public void setTypeface(Typeface typeface, Typeface typefaceChecked) {
+        setTypeface(typeface, typefaceChecked, 0, 0);
+    }
+
+    public void setTypeface(Typeface typeface, Typeface typefaceChecked, int style, int styleChecked) {
         this.tabTypeface = typeface;
         this.mTabTypefaceChecked = typefaceChecked;
-        this.mTabTypefaceStyleChecked = style;
+        this.tabTypefaceStyle = style;
+        this.mTabTypefaceStyleChecked = styleChecked;
         updateTabStyles();
     }
 
@@ -142,7 +147,8 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
                 TextView tab = (TextView) v;
                 tab.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
-                tab.setTypeface(i == currentPosition ? mTabTypefaceChecked : tabTypeface, mTabTypefaceStyleChecked);
+                tab.setTypeface(i == currentPosition ? mTabTypefaceChecked : tabTypeface,
+                        i == currentPosition ? mTabTypefaceStyleChecked : tabTypefaceStyle);
                 tab.setTextColor((i == currentPosition) ? tabTextColorSelected : tabTextColor);
 
                 // setAllCaps() is only available from API 14, so the upper case is made manually if we are on a
