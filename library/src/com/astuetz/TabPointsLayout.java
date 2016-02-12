@@ -3,11 +3,14 @@ package com.astuetz;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
 
 import com.astuetz.pagerslidingtabstrip.R;
 
@@ -20,6 +23,8 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private int mRadiusIndicator;
     private int mTextGravity = Gravity.BOTTOM;
     private int mMarginVerticalIndicator;
+    private Typeface mTabTypefaceChecked;
+    private int mTabTypefaceStyleChecked;
 
     public TabPointsLayout(Context context) {
         this(context, null);
@@ -82,6 +87,74 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             float dx = tab.getRight() - (tab.getWidth() / 2);
             float dy = height / 2 - mMarginVerticalIndicator;
             canvas.drawCircle(dx, dy, mRadiusPosition, rectPaint);
+        }
+    }
+
+    public int getRadiusPosition() {
+        return mRadiusPosition;
+    }
+
+    public void setRadiusPosition(int mRadiusPosition) {
+        this.mRadiusPosition = mRadiusPosition;
+    }
+
+    public int getRadiusIndicator() {
+        return mRadiusIndicator;
+    }
+
+    public void setRadiusIndicator(int mRadiusIndicator) {
+        this.mRadiusIndicator = mRadiusIndicator;
+    }
+
+    public void setTextGravity(int mTextGravity) {
+        this.mTextGravity = mTextGravity;
+    }
+
+    public int getMarginVerticalIndicator() {
+        return mMarginVerticalIndicator;
+    }
+
+    public void setMarginVerticalIndicator(int mMarginVerticalIndicator) {
+        this.mMarginVerticalIndicator = mMarginVerticalIndicator;
+    }
+
+    @Override
+    public void setTypeface(Typeface typeface, int style) {
+        setTypeface(typeface, typeface, style);
+    }
+
+    public void setTypeface(Typeface typeface, Typeface typefaceChecked, int style) {
+        this.tabTypeface = typeface;
+        this.mTabTypefaceChecked = typefaceChecked;
+        this.mTabTypefaceStyleChecked = style;
+        updateTabStyles();
+    }
+
+    @Override
+    protected void updateTabStyles() {
+        for (int i = 0; i < tabCount; i++) {
+
+            View v = tabsContainer.getChildAt(i);
+
+            v.setBackgroundResource(tabBackgroundResId);
+
+            if (v instanceof TextView) {
+
+                TextView tab = (TextView) v;
+                tab.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
+                tab.setTypeface(i == currentPosition ? mTabTypefaceChecked : tabTypeface, mTabTypefaceStyleChecked);
+                tab.setTextColor((i == currentPosition) ? tabTextColorSelected : tabTextColor);
+
+                // setAllCaps() is only available from API 14, so the upper case is made manually if we are on a
+                // pre-ICS-build
+                if (textAllCaps) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                        tab.setAllCaps(true);
+                    } else {
+                        tab.setText(tab.getText().toString().toUpperCase(locale));
+                    }
+                }
+            }
         }
     }
 }

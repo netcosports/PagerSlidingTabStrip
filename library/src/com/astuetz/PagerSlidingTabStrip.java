@@ -59,7 +59,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     protected LinearLayout tabsContainer;
     private ViewPager pager;
     protected int tabCount;
-    private int currentPosition = 0;
+    protected int currentPosition = 0;
     private float currentPositionOffset = 0f;
     protected Paint rectPaint;
     private Paint dividerPaint;
@@ -67,7 +67,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     protected int underlineColor = 0x1A000000;
     private int dividerColor = 0x1A000000;
     private boolean shouldExpand = false;
-    private boolean textAllCaps = true;
+    protected boolean textAllCaps = true;
     private boolean underlineBelowIndicator = true;
     private int scrollOffset = 52;
     private int indicatorHeight = 8;
@@ -75,14 +75,14 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private int dividerPadding = 12;
     private int tabPadding = 24;
     private int dividerWidth = 1;
-    private int tabTextSize = 12;
-    private int tabTextColor = 0xFF666666;
-    private int tabTextColorSelected = 0xFF666666;
-    private Typeface tabTypeface = null;
-    private int tabTypefaceStyle = Typeface.BOLD;
+    protected int tabTextSize = 12;
+    protected int tabTextColor = 0xFF666666;
+    protected int tabTextColorSelected = 0xFF666666;
+    protected Typeface tabTypeface = null;
+    protected int tabTypefaceStyle = Typeface.BOLD;
     private int lastScrollX = 0;
-    private int tabBackgroundResId = R.drawable.background_tab;
-    private Locale locale;
+    protected int tabBackgroundResId = R.drawable.background_tab;
+    protected Locale locale;
 
     public PagerSlidingTabStrip(Context context) {
         this(context, null);
@@ -263,7 +263,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         tabsContainer.addView(tab, position, shouldExpand ? expandedTabLayoutParams : defaultTabLayoutParams);
     }
 
-    private void updateTabStyles() {
+    protected void updateTabStyles() {
 
         for (int i = 0; i < tabCount; i++) {
 
