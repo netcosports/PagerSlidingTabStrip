@@ -23,6 +23,7 @@
         <attr name="pstsCircleIndicatorRadius" format="dimension" />
         <attr name="pstsMarginVerticalIndicator" format="dimension" />
         <attr name="android:gravity" />
+        <attr name="pstsMarginTopIcon" format="dimension" />
     </declare-styleable>
 
 </resources>

@@ -1,18 +1,31 @@
 package com.astuetz;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.astuetz.pagerslidingtabstrip.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TabPointsLayout extends PagerSlidingTabStrip {
 
@@ -25,6 +38,8 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private int mMarginVerticalIndicator;
     private Typeface mTabCheckedTypeface;
     private int mTabCheckedTypefaceStyle;
+    private int mMarginTopIcon;
+    private List<Bitmap> mListIcon = new ArrayList<>();
 
     public TabPointsLayout(Context context) {
         this(context, null);
@@ -44,7 +59,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPointsLayout);
         try {
             mTextGravity = a.getInteger(R.styleable.TabPointsLayout_android_gravity, Gravity.BOTTOM);
-
+            mMarginTopIcon = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsMarginTopIcon, mMarginTopIcon);
             mRadiusPosition = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCirclePositionRadius, mRadiusPosition);
             mRadiusIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCircleIndicatorRadius, mRadiusIndicator);
             mMarginVerticalIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsMarginVerticalIndicator, 0);
@@ -84,9 +99,31 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
         for (int i = 0; i < tabCount; i++) {
             View tab = tabsContainer.getChildAt(i);
-            float dx = tab.getRight() - (tab.getWidth() / 2);
+            float dx = tab.getRight() - tab.getWidth() / 2;
             float dy = height / 2 - mMarginVerticalIndicator;
             canvas.drawCircle(dx, dy, mRadiusPosition, rectPaint);
+        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mListIcon.isEmpty()) {
+            return;
+        }
+
+        rectPaint.setColorFilter(new LightingColorFilter(tabTextColorSelected, 1));
+
+        for (int i = 0; i < tabCount; i++) {
+            View tab = tabsContainer.getChildAt(i);
+            float dx = tab.getRight() - tab.getWidth() / 2 - mListIcon.get(i).getWidth() / 2;
+            float dy = mMarginTopIcon;
+            if (currentPosition == i) {
+                rectPaint.setAlpha(Color.alpha(tabTextColorSelected));
+            } else {
+                rectPaint.setAlpha(Color.alpha(tabTextColor));
+            }
+            canvas.drawBitmap(mListIcon.get(i), dx, dy, rectPaint);
         }
     }
 
@@ -162,5 +199,37 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
                 }
             }
         }
+    }
+
+    public void notifyDataSetChanged() {
+
+        tabsContainer.removeAllViews();
+        tabCount = pager.getAdapter().getCount();
+
+        for (int i = 0; i < tabCount; i++) {
+            addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
+            if (pager.getAdapter() instanceof IconTabProvider) {
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
+                mListIcon.add(bitmap);
+            }
+        }
+
+        updateTabStyles();
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @SuppressWarnings("deprecation")
+            @SuppressLint("NewApi")
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                currentPosition = pager.getCurrentItem();
+                updateTabStyles();
+                scrollToChild(currentPosition, 0);
+            }
+        });
+
     }
 }

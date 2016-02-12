@@ -57,7 +57,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private LinearLayout.LayoutParams defaultTabLayoutParams;
     private LinearLayout.LayoutParams expandedTabLayoutParams;
     protected LinearLayout tabsContainer;
-    private ViewPager pager;
+    protected ViewPager pager;
     protected int tabCount;
     protected int currentPosition = 0;
     private float currentPositionOffset = 0f;
@@ -227,7 +227,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     }
 
-    private void addTextTab(final int position, String title) {
+    protected void addTextTab(final int position, String title) {
 
         TextView tab = new TextView(getContext());
         tab.setText(title);
@@ -241,7 +241,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         return Gravity.CENTER;
     }
 
-    private void addIconTab(final int position, int resId) {
+    protected void addIconTab(final int position, int resId) {
 
         ImageButton tab = new ImageButton(getContext());
         tab.setImageResource(resId);
@@ -292,7 +292,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     }
 
-    private void scrollToChild(int position, int offset) {
+    protected void scrollToChild(int position, int offset) {
 
         if (tabCount == 0) {
             return;
@@ -344,6 +344,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             lineLeft = (currentPositionOffset * nextTabLeft + (1f - currentPositionOffset) * lineLeft);
             lineRight = (currentPositionOffset * nextTabRight + (1f - currentPositionOffset) * lineRight);
         }
+
 
         drawIndicator(canvas, lineLeft, lineRight);
 
