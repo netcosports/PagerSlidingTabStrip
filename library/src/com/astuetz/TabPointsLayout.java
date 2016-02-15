@@ -1,36 +1,30 @@
 package com.astuetz;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.astuetz.pagerslidingtabstrip.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TabPointsLayout extends PagerSlidingTabStrip {
 
     private static final int DEFAULT_RADIUS_POSITION = 3;
     private static final int DEFAULT_RADIUS_INDICATOR = 6;
+    private static final int DEFAULT_WIDTH_IMAGE = 16;
+    private static final int DEFAULT_HEIGHT_IMAGE = 16;
 
     private int mRadiusPosition;
     private int mRadiusIndicator;
@@ -39,7 +33,10 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private Typeface mTabCheckedTypeface;
     private int mTabCheckedTypefaceStyle;
     private int mMarginTopIcon;
-    private List<Bitmap> mListIcon = new ArrayList<>();
+    private int mWidthImage;
+    private int mHeightImage;
+    private int mColorImageTint;
+    private int mColorImageTintSelector;
 
     public TabPointsLayout(Context context) {
         this(context, null);
@@ -55,9 +52,16 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
         mRadiusPosition = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_RADIUS_POSITION, dm);
         mRadiusIndicator = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_RADIUS_INDICATOR, dm);
+        mWidthImage = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_WIDTH_IMAGE, dm);
+        mHeightImage = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_HEIGHT_IMAGE, dm);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPointsLayout);
         try {
+            mColorImageTint = a.getColor(R.styleable.TabPointsLayout_pstsImageTint, tabTextColor);
+            mColorImageTintSelector = a.getColor(R.styleable.TabPointsLayout_pstsImageTintSelector, tabTextColorSelected);
+
+            mWidthImage = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsWidthImage, mWidthImage);
+            mHeightImage = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsHeightImage, mHeightImage);
             mTextGravity = a.getInteger(R.styleable.TabPointsLayout_android_gravity, Gravity.BOTTOM);
             mMarginTopIcon = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsMarginTopIcon, mMarginTopIcon);
             mRadiusPosition = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCirclePositionRadius, mRadiusPosition);
@@ -102,28 +106,6 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             float dx = tab.getRight() - tab.getWidth() / 2;
             float dy = height / 2 - mMarginVerticalIndicator;
             canvas.drawCircle(dx, dy, mRadiusPosition, rectPaint);
-        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (mListIcon.isEmpty()) {
-            return;
-        }
-
-        rectPaint.setColorFilter(new LightingColorFilter(tabTextColorSelected, 1));
-
-        for (int i = 0; i < tabCount; i++) {
-            View tab = tabsContainer.getChildAt(i);
-            float dx = tab.getRight() - tab.getWidth() / 2 - mListIcon.get(i).getWidth() / 2;
-            float dy = mMarginTopIcon;
-            if (currentPosition == i) {
-                rectPaint.setAlpha(Color.alpha(tabTextColorSelected));
-            } else {
-                rectPaint.setAlpha(Color.alpha(tabTextColor));
-            }
-            canvas.drawBitmap(mListIcon.get(i), dx, dy, rectPaint);
         }
     }
 
@@ -177,59 +159,94 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
         for (int i = 0; i < tabCount; i++) {
 
             View v = tabsContainer.getChildAt(i);
-
             v.setBackgroundResource(tabBackgroundResId);
+            TextView tv;
+            if (v instanceof LinearLayout) {
+                tv = (TextView) ((ViewGroup) v).getChildAt(1);
 
-            if (v instanceof TextView) {
+                ImageView iv = (ImageView) ((ViewGroup) v).getChildAt(0);
+                iv.setColorFilter((i == currentPosition) ? mColorImageTintSelector : mColorImageTint, PorterDuff.Mode.MULTIPLY);
+            } else {
+                tv = (TextView) v;
+            }
 
-                TextView tab = (TextView) v;
-                tab.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
-                tab.setTypeface(i == currentPosition ? mTabCheckedTypeface : tabTypeface,
-                        i == currentPosition ? mTabCheckedTypefaceStyle : tabTypefaceStyle);
-                tab.setTextColor((i == currentPosition) ? tabTextColorSelected : tabTextColor);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
+            tv.setTypeface(i == currentPosition ? mTabCheckedTypeface : tabTypeface,
+                    i == currentPosition ? mTabCheckedTypefaceStyle : tabTypefaceStyle);
+            tv.setTextColor((i == currentPosition) ? tabTextColorSelected : tabTextColor);
 
-                // setAllCaps() is only available from API 14, so the upper case is made manually if we are on a
-                // pre-ICS-build
-                if (textAllCaps) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                        tab.setAllCaps(true);
-                    } else {
-                        tab.setText(tab.getText().toString().toUpperCase(locale));
-                    }
+            // setAllCaps() is only available from API 14, so the upper case is made manually if we are on a
+            // pre-ICS-build
+            if (textAllCaps) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                    tv.setAllCaps(true);
+                } else {
+                    tv.setText(tv.getText().toString().toUpperCase(locale));
                 }
             }
         }
     }
 
-    public void notifyDataSetChanged() {
-
-        tabsContainer.removeAllViews();
-        tabCount = pager.getAdapter().getCount();
-
+    @Override
+    protected void addItemTab(int tabCount) {
         for (int i = 0; i < tabCount; i++) {
-            addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
+
             if (pager.getAdapter() instanceof IconTabProvider) {
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
-                mListIcon.add(bitmap);
+                LinearLayout llContainer = new LinearLayout(getContext());
+                llContainer.setOrientation(LinearLayout.VERTICAL);
+                llContainer.setGravity(Gravity.CENTER_HORIZONTAL);
+                llContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                AppCompatImageView iv = new AppCompatImageView(getContext());
+                iv.setLayoutParams(new LinearLayout.LayoutParams(mWidthImage, mHeightImage));
+                iv.setColorFilter(mColorImageTintSelector, PorterDuff.Mode.MULTIPLY);
+                iv.setImageResource(((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
+                llContainer.addView(iv);
+
+                TextView tv = new TextView(getContext());
+                tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                tv.setText(pager.getAdapter().getPageTitle(i).toString());
+                tv.setGravity(getTextGravity());
+                tv.setSingleLine();
+                llContainer.addView(tv);
+
+                addTab(i, llContainer);
+            } else {
+                addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
+            }
+
+        }
+    }
+
+    @Override
+    protected PageListener cratePagerListener() {
+        return new TabPointsPageListener();
+    }
+
+    protected class TabPointsPageListener extends PageListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            boolean updateStyles = currentPosition != position;
+
+            currentPosition = position;
+            currentPositionOffset = positionOffset;
+
+            if (tabsContainer != null && position < tabsContainer.getChildCount()) {
+                scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+            }
+
+            invalidate();
+
+            if (delegatePageListener != null) {
+                delegatePageListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            if (updateStyles) {
+                updateTabStyles();
             }
         }
-
-        updateTabStyles();
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @SuppressWarnings("deprecation")
-            @SuppressLint("NewApi")
-            @Override
-            public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-                currentPosition = pager.getCurrentItem();
-                updateTabStyles();
-                scrollToChild(currentPosition, 0);
-            }
-        });
 
     }
 }
