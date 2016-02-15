@@ -13,7 +13,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -161,13 +160,15 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             View v = tabsContainer.getChildAt(i);
             v.setBackgroundResource(tabBackgroundResId);
             TextView tv;
-            if (v instanceof LinearLayout) {
-                tv = (TextView) ((ViewGroup) v).getChildAt(1);
 
-                ImageView iv = (ImageView) ((ViewGroup) v).getChildAt(0);
+            if (v instanceof ViewGroup) {
+                tv = (TextView) v.findViewById(R.id.text_tab);
+                AppCompatImageView iv = (AppCompatImageView) v.findViewById(R.id.image_tab);
                 iv.setColorFilter((i == currentPosition) ? mColorImageTintSelector : mColorImageTint, PorterDuff.Mode.MULTIPLY);
-            } else {
+            } else if (v instanceof TextView) {
                 tv = (TextView) v;
+            } else {
+                return;
             }
 
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
@@ -198,12 +199,14 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
                 llContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
                 AppCompatImageView iv = new AppCompatImageView(getContext());
+                iv.setId(R.id.image_tab);
                 iv.setLayoutParams(new LinearLayout.LayoutParams(mWidthImage, mHeightImage));
                 iv.setColorFilter(mColorImageTintSelector, PorterDuff.Mode.MULTIPLY);
                 iv.setImageResource(((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
                 llContainer.addView(iv);
 
                 TextView tv = new TextView(getContext());
+                tv.setId(R.id.text_tab);
                 tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 tv.setText(pager.getAdapter().getPageTitle(i).toString());
                 tv.setGravity(getTextGravity());
