@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import com.astuetz.pagerslidingtabstrip.R;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TabPointsLayout extends PagerSlidingTabStrip {
 
     private static final int DEFAULT_RADIUS_POSITION = 3;
@@ -36,6 +39,8 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private int mHeightImage;
     private int mColorImageTint;
     private int mColorImageTintSelector;
+    private Map<Integer, OnClickListener> mMapListeners = new HashMap<>();
+
 
     public TabPointsLayout(Context context) {
         this(context, null);
@@ -219,6 +224,17 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             }
 
         }
+    }
+
+    protected void addTab(final int position, View tab) {
+        super.addTab(position, tab);
+        if (mMapListeners.size() > 0 && mMapListeners.get(position) != null) {
+            tab.setOnClickListener(mMapListeners.get(position));
+        }
+    }
+
+    public void setOnClickListenerByPosition(OnClickListener listener, int position) {
+        mMapListeners.put(position, listener);
     }
 
     @Override
