@@ -83,6 +83,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private int lastScrollX = 0;
     protected int tabBackgroundResId = R.drawable.background_tab;
     protected Locale locale;
+    private int mGravity;
 
     public PagerSlidingTabStrip(Context context) {
         this(context, null);
@@ -98,13 +99,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         setFillViewport(true);
         setWillNotDraw(false);
 
-        tabsContainer = new LinearLayout(context);
-        tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
-        tabsContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        addView(tabsContainer);
-
         DisplayMetrics dm = getResources().getDisplayMetrics();
-
         scrollOffset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, scrollOffset, dm);
         indicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, indicatorHeight, dm);
         underlineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, underlineHeight, dm);
@@ -116,11 +111,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         // get system attrs (android:textSize and android:textColor)
 
         TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
-
         tabTextSize = a.getDimensionPixelSize(0, tabTextSize);
-
         tabTextColor = a.getColor(1, tabTextColor);
-
         a.recycle();
 
         // get custom attrs
@@ -140,7 +132,14 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTextAllCaps, textAllCaps);
         underlineBelowIndicator = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsUnderlineBelowIndicator, underlineBelowIndicator);
         tabTextColorSelected = a.getColor(R.styleable.PagerSlidingTabStrip_pstsTextSelectedColor, tabTextColorSelected);
+        mGravity = a.getInteger(R.styleable.PagerSlidingTabStrip_android_gravity, Gravity.START);
         a.recycle();
+
+        tabsContainer = new LinearLayout(context);
+        tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
+        tabsContainer.setGravity(mGravity);
+        tabsContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        addView(tabsContainer);
 
         rectPaint = new Paint();
         rectPaint.setAntiAlias(true);
