@@ -27,7 +27,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
     private int mRadiusPosition;
     private int mRadiusIndicator;
-    private int mTextGravity = Gravity.BOTTOM;
+    private int mTextGravity;
     private int mMarginVerticalIndicator;
     private Typeface mTabCheckedTypeface;
     private int mTabCheckedTypefaceStyle;
@@ -61,7 +61,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
             mWidthImage = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsWidthImage, mWidthImage);
             mHeightImage = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsHeightImage, mHeightImage);
-            mTextGravity = a.getInteger(R.styleable.TabPointsLayout_android_gravity, Gravity.BOTTOM);
+            mTextGravity = a.getInteger(R.styleable.TabPointsLayout_pstsTextGravity, Gravity.BOTTOM);
             mMarginTopIcon = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsMarginTopIcon, mMarginTopIcon);
             mRadiusPosition = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCirclePositionRadius, mRadiusPosition);
             mRadiusIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCircleIndicatorRadius, mRadiusIndicator);
