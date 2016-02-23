@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -244,10 +245,24 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
     protected class TabPointsPageListener extends PageListener {
 
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            if (state == ViewPager.SCROLL_STATE_IDLE) {
+                updateTabStyles();
+            }
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (delegatePageListener != null) {
+                delegatePageListener.onPageSelected(position);
+            }
+        }
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            boolean updateStyles = currentPosition != position;
 
             currentPosition = position;
             currentPositionOffset = positionOffset;
@@ -260,10 +275,6 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
             if (delegatePageListener != null) {
                 delegatePageListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
-            }
-
-            if (updateStyles) {
-                updateTabStyles();
             }
         }
 
