@@ -27,12 +27,15 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
@@ -84,6 +87,12 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     protected int tabBackgroundResId = R.drawable.background_tab;
     protected Locale locale;
     private int mGravity;
+
+    /**
+     * Fields for customization fonts and layout
+     */
+    private int mTabViewLayoutId;
+    private int mTabViewTextViewId;
 
     public PagerSlidingTabStrip(Context context) {
         this(context, null);
@@ -177,6 +186,17 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         return Color.rgb((int) r, (int) g, (int) b);
     }
 
+    /**
+     * Set the custom layout to be inflated for the tab views.
+     *
+     * @param layoutResId Layout id to be inflated
+     * @param textViewId id of the {@link android.widget.TextView} in the inflated view
+     */
+    public void setCustomTabView(@LayoutRes int layoutResId, @IdRes int textViewId) {
+        mTabViewLayoutId = layoutResId;
+        mTabViewTextViewId = textViewId;
+    }
+
     public void setViewPager(ViewPager pager) {
         this.pager = pager;
 
@@ -235,8 +255,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     }
 
     protected void addTextTab(final int position, String title) {
+        TextView tab;
 
-        TextView tab = new TextView(getContext());
+        if (mTabViewLayoutId > 0) {
+            // If there is a custom tab view layout id set, try and inflate it
+            View tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, null);
+            tab = (TextView) tabView.findViewById(mTabViewTextViewId);
+        } else {
+            tab = new TextView(getContext());
+        }
+
         tab.setText(title);
         tab.setGravity(getTextGravity());
         tab.setSingleLine();
@@ -275,14 +303,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         for (int i = 0; i < tabCount; i++) {
 
             View v = tabsContainer.getChildAt(i);
-
             v.setBackgroundResource(tabBackgroundResId);
 
             if (v instanceof TextView) {
-
                 TextView tab = (TextView) v;
                 tab.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
-                tab.setTypeface(tabTypeface, tabTypefaceStyle);
+
+                if (mTabViewLayoutId <= 0) {
+                    tab.setTypeface(tabTypeface, tabTypefaceStyle);
+                }
+
                 tab.setTextColor((i == currentPosition) ? tabTextColorSelected : tabTextColor);
 
                 // setAllCaps() is only available from API 14, so the upper case is made manually if we are on a
