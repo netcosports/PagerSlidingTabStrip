@@ -2,38 +2,39 @@
 <resources>
 
     <declare-styleable name="PagerSlidingTabStrip">
-        <attr name="pstsIndicatorColor" format="color" />
-        <attr name="pstsUnderlineColor" format="color" />
-        <attr name="pstsDividerColor" format="color" />
-        <attr name="pstsTextSelectedColor" format="color" />
-        <attr name="pstsIndicatorHeight" format="dimension" />
-        <attr name="pstsUnderlineHeight" format="dimension" />
-        <attr name="pstsDividerPadding" format="dimension" />
-        <attr name="pstsTabPaddingLeftRight" format="dimension" />
-        <attr name="pstsScrollOffset" format="dimension" />
-        <attr name="pstsTabBackground" format="reference" />
-        <attr name="pstsShouldExpand" format="boolean" />
-        <attr name="pstsTextAllCaps" format="boolean" />
-        <attr name="pstsUnderlineBelowIndicator" format="boolean" />
-        <attr name="android:gravity" />
+        <attr name="pstsIndicatorColor" format="color"/>
+        <attr name="pstsUnderlineColor" format="color"/>
+        <attr name="pstsDividerColor" format="color"/>
+        <attr name="pstsTextSelectedColor" format="color"/>
+        <attr name="pstsIndicatorHeight" format="dimension"/>
+        <attr name="pstsUnderlineHeight" format="dimension"/>
+        <attr name="pstsDividerPadding" format="dimension"/>
+        <attr name="pstsTabPaddingLeftRight" format="dimension"/>
+        <attr name="pstsScrollOffset" format="dimension"/>
+        <attr name="pstsTabBackground" format="reference"/>
+        <attr name="pstsShouldExpand" format="boolean"/>
+        <attr name="pstsTextAllCaps" format="boolean"/>
+        <attr name="pstsUnderlineBelowIndicator" format="boolean"/>
+        <attr name="android:gravity"/>
     </declare-styleable>
 
     <declare-styleable name="TabPointsLayout">
-        <attr name="pstsCirclePositionRadius" format="dimension" />
-        <attr name="pstsCircleIndicatorRadius" format="dimension" />
-        <attr name="pstsMarginVerticalIndicator" format="dimension" />
+        <attr name="pstsCirclePositionRadius" format="dimension"/>
+        <attr name="pstsCircleIndicatorRadius" format="dimension"/>
+        <attr name="pstsMarginVerticalIndicator" format="dimension"/>
         <attr name="pstsTextGravity">
-            <flag name="top" value="0x30" />
-            <flag name="bottom" value="0x50" />
-            <flag name="center_vertical" value="0x70" />
-            <flag name="center_horizontal" value="0x07" />
-            <flag name="center" value="0x11" />
+            <flag name="top" value="0x30"/>
+            <flag name="bottom" value="0x50"/>
+            <flag name="center_vertical" value="0x70"/>
+            <flag name="center_horizontal" value="0x07"/>
+            <flag name="center" value="0x11"/>
         </attr>
-        <attr name="pstsMarginTopIcon" format="dimension" />
-        <attr name="pstsHeightImage" format="dimension" />
-        <attr name="pstsWidthImage" format="dimension" />
-        <attr name="pstsImageTintSelector" format="color" />
-        <attr name="pstsImageTint" format="color" />
+        <attr name="pstsMarginTopIcon" format="dimension"/>
+        <attr name="pstsHeightImage" format="dimension"/>
+        <attr name="pstsWidthImage" format="dimension"/>
+        <attr name="pstsImageTintSelector" format="color"/>
+        <attr name="pstsImageTint" format="color"/>
+        <attr name="pstsSelectable" format="boolean"/>
     </declare-styleable>
 
 </resources>

@@ -40,6 +40,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private int mHeightImage;
     private int mColorImageTint;
     private int mColorImageTintSelector;
+    private boolean isSelectable;
     private Map<Integer, OnClickListener> mMapListeners = new HashMap<>();
 
 
@@ -72,6 +73,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             mRadiusPosition = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCirclePositionRadius, mRadiusPosition);
             mRadiusIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCircleIndicatorRadius, mRadiusIndicator);
             mMarginVerticalIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsMarginVerticalIndicator, 0);
+            isSelectable = a.getBoolean(R.styleable.TabPointsLayout_pstsSelectable, true);
 
             if (mRadiusIndicator < mRadiusPosition) {
                 mRadiusIndicator = mRadiusPosition;
@@ -161,6 +163,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
     @Override
     protected void updateTabStyles() {
+
         for (int i = 0; i < tabCount; i++) {
 
             View v = tabsContainer.getChildAt(i);
@@ -170,7 +173,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             if (v instanceof ViewGroup) {
                 tv = (TextView) v.findViewById(R.id.text_tab);
                 AppCompatImageView iv = (AppCompatImageView) v.findViewById(R.id.image_tab);
-                iv.setColorFilter((i == currentPosition) ? mColorImageTintSelector : mColorImageTint, PorterDuff.Mode.MULTIPLY);
+                iv.setColorFilter((i == currentPosition || !isSelectable) ? mColorImageTintSelector : mColorImageTint, PorterDuff.Mode.MULTIPLY);
             } else if (v instanceof TextView) {
                 tv = (TextView) v;
             } else {
@@ -178,9 +181,9 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             }
 
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
-            tv.setTypeface(i == currentPosition ? mTabCheckedTypeface : tabTypeface,
-                    i == currentPosition ? mTabCheckedTypefaceStyle : tabTypefaceStyle);
-            tv.setTextColor((i == currentPosition) ? tabTextColorSelected : tabTextColor);
+            tv.setTypeface(i == currentPosition || !isSelectable ? mTabCheckedTypeface : tabTypeface,
+                    i == currentPosition || !isSelectable ? mTabCheckedTypefaceStyle : tabTypefaceStyle);
+            tv.setTextColor((i == currentPosition || !isSelectable) ? tabTextColorSelected : tabTextColor);
 
             // setAllCaps() is only available from API 14, so the upper case is made manually if we are on a
             // pre-ICS-build
