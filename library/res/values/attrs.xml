@@ -35,6 +35,7 @@
         <attr name="pstsImageTintSelector" format="color"/>
         <attr name="pstsImageTint" format="color"/>
         <attr name="pstsSelectable" format="boolean"/>
+        <attr name="pstsHideUnderline" format="boolean"/>
     </declare-styleable>
 
 </resources>

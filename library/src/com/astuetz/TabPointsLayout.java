@@ -41,6 +41,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
     private int mColorImageTint;
     private int mColorImageTintSelector;
     private boolean isSelectable;
+    private boolean isHideUnderline;
     private Map<Integer, OnClickListener> mMapListeners = new HashMap<>();
 
 
@@ -74,6 +75,7 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
             mRadiusIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsCircleIndicatorRadius, mRadiusIndicator);
             mMarginVerticalIndicator = a.getDimensionPixelSize(R.styleable.TabPointsLayout_pstsMarginVerticalIndicator, 0);
             isSelectable = a.getBoolean(R.styleable.TabPointsLayout_pstsSelectable, true);
+            isHideUnderline = a.getBoolean(R.styleable.TabPointsLayout_pstsHideUnderline, false);
 
             if (mRadiusIndicator < mRadiusPosition) {
                 mRadiusIndicator = mRadiusPosition;
@@ -95,6 +97,10 @@ public class TabPointsLayout extends PagerSlidingTabStrip {
 
     @Override
     protected void drawUnderline(Canvas canvas) {
+        if (isHideUnderline) {
+            return;
+        }
+
         int height = getHeight();
         rectPaint.setColor(underlineColor);
 
